@@ -1,4 +1,4 @@
-module codeberg.org/strubbl/wallabag2linkding
+module codeberg.org/strubbl/feed2linkding
 
 go 1.21.1
 
