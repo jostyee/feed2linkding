@@ -8,6 +8,7 @@
 *.dll
 *.so
 *.dylib
+wallabag2linkding
 
 # Test binary, built with `go test -c`
 *.test
