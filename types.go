@@ -8,5 +8,5 @@ type LinkdingURL struct {
 	IsArchived  bool     `json:"is_archived"`
 	IsUnread    bool     `json:"unread"`
 	IsShared    bool     `json:"shared"`
-	TagNames    []string `json:"tag_names"`
+	TagNames    []string `json:"tag_names,omitempty"`
 }
