@@ -1,4 +1,4 @@
-module codeberg.org/strubbl/feed2linkding
+module codeberg.org/jostyee/feed2linkding
 
 go 1.23
 
