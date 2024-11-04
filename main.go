@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"html"
 	"io"
 	"log"
@@ -23,6 +24,7 @@ var (
 
 	c = http.Client{Timeout: time.Duration(5) * time.Second}
 
+	excludedDomains     = make(map[string]struct{})
 	createAPI, checkAPI = "", ""
 )
 
@@ -55,6 +57,17 @@ func main() {
 		ld.Title = html.UnescapeString(title)
 
 		ld.Link = fi.Link
+		excluded, err := excludedDomain(ld.Link)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		if excluded {
+			if *d {
+				log.Println("domain excluded: ", ld.Link)
+			}
+			continue
+		}
+
 		existed, err := checkLink(ld.Link)
 		if err != nil {
 			log.Fatalln(err)
@@ -122,6 +135,17 @@ func postLink(ldLinkJSON []byte) error {
 
 type CheckResponse struct {
 	Bookmark any `json:"bookmark"`
+}
+
+func excludedDomain(link string) (bool, error) {
+	parsedUrl, err := url.Parse(link)
+	if err != nil {
+		return false, fmt.Errorf("Error parsing URL:", err)
+	}
+
+	domain := parsedUrl.Hostname()
+	_, ok := excludedDomains[domain]
+	return ok, nil
 }
 
 // checkLink checks if a link is already in the Linkding database

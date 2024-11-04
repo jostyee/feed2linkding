@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"log"
@@ -18,6 +19,7 @@ var v = flag.Bool("v", false, "print the program's version")
 var d = flag.Bool("d", false, "print debug output")
 var dd = flag.Bool("dd", false, "like parameter -d, but print more debug output")
 var ddd = flag.Bool("ddd", false, "like parameter -dd, but print even more debug output")
+var filePath = flag.String("exclude_domain_file", "", "Path to the filei, which contains domains to exclude from the import")
 
 func handleFlags() {
 	flag.Parse()
@@ -48,5 +50,19 @@ func handleFlags() {
 		log.Println("Debug Level dd is active")
 	} else if *d {
 		log.Println("Debug Level d is active")
+	}
+
+	if *filePath != "" {
+		file, err := os.Open(*filePath)
+		if err != nil {
+			fmt.Printf("Error opening file: %v\n", err)
+			return
+		}
+		defer file.Close()
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			excludedDomains[scanner.Text()] = struct{}{}
+		}
 	}
 }
