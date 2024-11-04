@@ -55,7 +55,7 @@ func main() {
 		ld.IsArchived = *givenIsArchived
 		ld.IsUnread = *givenIsUnread
 		ld.IsShared = *givenIsShared
-		ld.TagNames = fi.Categories
+		var ld.TagNames []string
 		if *givenTag != "" {
 			ld.TagNames = append(ld.TagNames, *givenTag)
 		}
