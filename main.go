@@ -13,6 +13,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/go-retryablehttp"
 	"github.com/mmcdole/gofeed"
 )
 
@@ -22,7 +23,7 @@ var (
 	date    = "unknown"
 	builtBy = "unknown"
 
-	c = http.Client{Timeout: time.Duration(5) * time.Second}
+	c = initHTTPClient()
 
 	excludedDomains     = make(map[string]struct{})
 	createAPI, checkAPI = "", ""
@@ -181,4 +182,11 @@ func checkLink(link string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func initHTTPClient() *http.Client {
+	retryClient := retryablehttp.NewClient()
+	retryClient.RetryMax = 3
+
+	return retryClient.StandardClient()
 }
